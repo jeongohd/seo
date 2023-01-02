@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.project.board.BoardMapper">
+
+	<insert id="insert" parameterType="kr.co.project.board.BoardVO">
+		INSERT INTO board (
+			title, content, regdate, viewcount, member_no, filename_org, filename_real
+		) VALUES (
+			#{title}, #{content}, NOW(), 0, #{member_no}, #{filename_org}, #{filename_real}
+		)
+	</insert>
+	
+	<select id="count" parameterType="kr.co.project.board.BoardVO" resultType="java.lang.Integer">
+		SELECT COUNT(*) FROM board
+		<where>
+			<if test="stype != null and stype != ''">
+				<if test="stype != 'all'">
+					${stype} LIKE '%${sword}%'
+				</if>
+				<if test="stype == 'all'">
+		    		title LIKE '%${sword}%' OR  content LIKE '%${sword}%'
+		    	</if>
+		    </if>
+		</where>
+	</select>
+	
+	<select id="list" parameterType="kr.co.project.board.BoardVO" resultType="kr.co.project.board.BoardVO">
+		SELECT *,
+			(SELECT name FROM member WHERE no=board.member_no) AS member_name,
+			(SELECT COUNT(*) FROM comment WHERE board_no=board.no AND tablename='board') AS comment_count
+		FROM board
+		<where>
+			<if test="stype != null and stype != ''">
+				<if test="stype != 'all'">
+					${stype} LIKE '%${sword}%'
+				</if>
+				<if test="stype == 'all'">
+		    		title LIKE '%${sword}%' OR  content LIKE '%${sword}%'
+		    	</if>
+		    </if>
+		</where>
+		ORDER BY regdate DESC
+		LIMIT  ${startIdx},${pageRow};
+	</select>
+	
+	<select id="view" parameterType="int" resultType="kr.co.project.board.BoardVO">
+		SELECT * FROM board WHERE no = #{xxxxx}
+	</select>
+	
+	<update id="updateViewcount" parameterType="int">
+		UPDATE board SET viewcount = viewcount+1 WHERE no = #{no}
+	</update>
+	
+	<update id="update" parameterType="kr.co.project.board.BoardVO">
+		UPDATE board SET
+			title = #{title}
+			, content = #{content}
+			<if test="filename_org != null">
+			, filename_org = #{filename_org}
+			, filename_real = #{filename_real}
+			</if>
+		WHERE no = #{no}
+	</update>
+	
+	<delete id="delete" parameterType="int">
+		DELETE FROM board WHERE no=#{no} 
+	</delete>
+	
+	
+	
+	
+	
+	
+</mapper>
