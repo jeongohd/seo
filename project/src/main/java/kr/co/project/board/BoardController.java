@@ -43,7 +43,7 @@ public class BoardController{
 //		map.put("list", service.index(vo));
 //		return new ResponseEntity<>(map, HttpStatus.OK );
 //	}
-	
+
 	@GetMapping("/test")
 	@ResponseBody
 	public Map test(BoardVO vo) {
