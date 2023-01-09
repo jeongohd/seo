@@ -25,7 +25,7 @@ import util.ElasticSearch;
 
 @Controller
 public class BoardController{
-	// 여기 수정1.
+	// 여기 수정1. jeong breanch 에서 수정.
 	@Autowired
 	BoardService service;
 	@Autowired
